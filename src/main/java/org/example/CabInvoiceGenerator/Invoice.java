@@ -2,14 +2,26 @@ package org.example.CabInvoiceGenerator;
 
 public class Invoice implements IInvoice {
 
+
+    //Constants
+    double ratePerKm = 10;
+    int ratePerMinute = 1;
+    double minimumFare = 5;
+    double totalFare;
+
     //Calculating Fare
     @Override
     public double calculateFare(double distance, double time) {
-        //Constants
-        double ratePerKm = 10;
-        int ratePerMinute = 1;
+
         double totalFare = ratePerKm * distance + ratePerMinute * time;
-        double minimumFare = 5;
+        return Math.max(totalFare, minimumFare);
+    }
+
+    //calculating total fares for multiple rides
+    @Override
+    public double calculateFare(Ride[] rides) {
+        for (Ride ride : rides)
+            totalFare += calculateFare(ride.getDistance(), ride.getTime());
         return Math.max(totalFare, minimumFare);
     }
 }

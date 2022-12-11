@@ -2,9 +2,15 @@ package org.example.CabInvoiceGenerator;
 
 public class CabBooking {
 
+    IInvoice iInvoice = InvoiceFactory.getInvoiceInstance();
+
     //Method for calculating fare
     public double calculateRideFare(double distance, double time) {
-        IInvoice iInvoice = InvoiceFactory.getInvoiceInstance();
         return iInvoice.calculateFare(distance, time);
+    }
+
+    //Method for calculating multiple fare
+    public double calculateRideFare(Ride[] rides) {
+        return iInvoice.calculateFare(rides);
     }
 }
