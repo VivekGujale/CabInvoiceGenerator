@@ -9,9 +9,7 @@ public class RideRepository {
     //Method for adding ride logic
     public Map<String, ArrayList<Ride>> addRides(String userId, Ride[] rides) {
         Map<String, ArrayList<Ride>> userRides = new HashMap<>();
-        ArrayList<Ride> rideArrayList = userRides.get(userId);
-        if (rideArrayList == null)
-            userRides.put(userId, new ArrayList<>(Arrays.asList(rides)));
+        userRides.computeIfAbsent(userId, k -> new ArrayList<>(Arrays.asList(rides)));
         return userRides;
     }
 

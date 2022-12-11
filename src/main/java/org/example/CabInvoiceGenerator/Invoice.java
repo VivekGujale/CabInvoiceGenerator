@@ -7,11 +7,25 @@ public class Invoice implements IInvoice {
 
 
     //Constants
-    double ratePerKm = 10;
-    int ratePerMinute = 1;
-    double minimumFare = 5;
+    double ratePerKm;
+    int ratePerMinute;
+    double minimumFare;
     double totalFare;
     private RideRepository rideRepository;
+
+    public enum TypeOfSubscription {NORMAL, PREMIUM}
+
+    public Invoice(TypeOfSubscription typeOfSubscription) {
+        if (typeOfSubscription.equals(TypeOfSubscription.PREMIUM)) {
+            this.ratePerKm = 15;
+            this.ratePerMinute = 2;
+            this.minimumFare = 20;
+        } else if (typeOfSubscription.equals(TypeOfSubscription.NORMAL)) {
+            this.ratePerKm = 10;
+            this.ratePerMinute = 1;
+            this.minimumFare = 5;
+        }
+    }
 
     //Calculating Fare
     @Override

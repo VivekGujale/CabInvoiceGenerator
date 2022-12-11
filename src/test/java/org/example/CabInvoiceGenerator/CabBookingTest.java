@@ -5,17 +5,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import java.util.Map;
 
 public class CabBookingTest {
 
+    private CabBooking cabBooking;
+
     @Before
     public void setUp() {
-        cabBooking = new CabBooking();
+        cabBooking = new CabBooking(Invoice.TypeOfSubscription.NORMAL);
     }
 
-    private CabBooking cabBooking;
 
     @Test
     public void givenDistanceTime_WhenCalculateFare_ThenShouldReturnTotalFare() {
@@ -84,6 +85,41 @@ public class CabBookingTest {
         userRides = cabBooking.addRides(userId, rides);
         InvoiceDetails details = cabBooking.getInvoiceDetails(userId, userRides);
         InvoiceDetails expectedDetails = new InvoiceDetails(2, 150);
+        Assert.assertEquals(expectedDetails, details);
+    }
+
+    //for premium ride, calculating total fare
+    @Test
+    public void givenDistanceTimeForPremiumSubscription_WhenCalculateFare_ThenShouldReturnTotalFare() {
+        cabBooking = new CabBooking(Invoice.TypeOfSubscription.PREMIUM);
+        //here as per formula totalFare = ratePerKm * distance + ratePerMinute * time;
+        // so (15*15) + (2*20.15) =  285.3
+        double totalFare = cabBooking.calculateRideFare(15, 30.15);
+        Assert.assertEquals(285.3, totalFare, 1);
+    }
+
+
+    //for premium ride, calculating total fare for multiple rides
+    @Test
+    public void givenMultipleRidesForPremiumSubscription_WhenCalculateFare_ThenShouldReturnTotalFare() {
+        cabBooking = new CabBooking(Invoice.TypeOfSubscription.PREMIUM);
+        Ride[] rides = {new Ride(4, 10),
+                new Ride(10, 15)};
+        InvoiceDetails invoiceDetails = cabBooking.calculateRideFare(rides);
+        Assert.assertEquals(260, invoiceDetails.getTotalFare(), 0);
+    }
+
+    ////for premium ride, given userID invoice service gets the list of rides from user repository and return invoice.
+    @Test
+    public void givenUserIdAndRidesPremiumSubscription_WhenCalculateFare_ShouldReturnInvoiceDetails() {
+        cabBooking = new CabBooking(Invoice.TypeOfSubscription.PREMIUM);
+        Map<String, ArrayList<Ride>> userRides;
+        String userId = "Vivek07";
+        Ride[] rides = {new Ride(4, 10),
+                new Ride(10, 15)};
+        userRides = cabBooking.addRides(userId, rides);
+        InvoiceDetails details = cabBooking.getInvoiceDetails(userId, userRides);
+        InvoiceDetails expectedDetails = new InvoiceDetails(2, 260);
         Assert.assertEquals(expectedDetails, details);
     }
 }
