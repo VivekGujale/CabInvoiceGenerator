@@ -1,5 +1,8 @@
 package org.example.CabInvoiceGenerator;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 public class Invoice implements IInvoice {
 
 
@@ -8,6 +11,7 @@ public class Invoice implements IInvoice {
     int ratePerMinute = 1;
     double minimumFare = 5;
     double totalFare;
+    private RideRepository rideRepository;
 
     //Calculating Fare
     @Override
@@ -24,4 +28,20 @@ public class Invoice implements IInvoice {
             totalFare += calculateFare(ride.getDistance(), ride.getTime());
         return Math.max(totalFare, minimumFare);
     }
+
+    //Method for inserting multiple rides
+    @Override
+    public Map<String, ArrayList<Ride>> addRides(String userId, Ride[] rides) {
+        rideRepository = new RideRepository();
+        return rideRepository.addRides(userId, rides);
+    }
+
+    //Method for getting rides detail of particular user
+    @Override
+    public InvoiceDetails getInvoiceDetails(String userId, Map<String, ArrayList<Ride>> userRides) {
+        rideRepository = new RideRepository();
+        totalFare = calculateFare(rideRepository.getRidesByUserId(userId, userRides));
+        return new InvoiceDetails(rideRepository.getRidesByUserId(userId, userRides).length, totalFare);
+    }
+
 }

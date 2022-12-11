@@ -4,6 +4,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
+import java.util.Map;
+
 public class CabBookingTest {
 
     @Before
@@ -68,5 +72,18 @@ public class CabBookingTest {
                 new Ride(6.2, 15)};
         InvoiceDetails details = cabBooking.calculateRideFare(rides);
         Assert.assertEquals(38.17, details.getAverageFare(), 1);
+    }
+
+    //Given userID, the invoice service gets the list of rides from user repository and return invoice.
+    @Test
+    public void givenUserIdAndRides_WhenCalculateFare_ShouldReturnInvoiceDetails() {
+        Map<String, ArrayList<Ride>> userRides;
+        String userId = "Vivek07";
+        Ride[] rides = {new Ride(2.0, 5),
+                new Ride(10, 25)};
+        userRides = cabBooking.addRides(userId, rides);
+        InvoiceDetails details = cabBooking.getInvoiceDetails(userId, userRides);
+        InvoiceDetails expectedDetails = new InvoiceDetails(2, 150);
+        Assert.assertEquals(expectedDetails, details);
     }
 }
