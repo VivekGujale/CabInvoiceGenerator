@@ -9,8 +9,11 @@ public class CabBooking {
         return iInvoice.calculateFare(distance, time);
     }
 
-    //Method for calculating multiple fare
-    public double calculateRideFare(Ride[] rides) {
-        return iInvoice.calculateFare(rides);
-    }
+    //Method for calculating multiple fare and generating invoice details
+        public InvoiceDetails calculateRideFare(Ride[] rides) {
+            iInvoice = InvoiceFactory.getInvoiceInstance();
+            double totalFare=iInvoice.calculateFare(rides);
+            return new InvoiceDetails(rides.length,totalFare);
+        }
+
 }
